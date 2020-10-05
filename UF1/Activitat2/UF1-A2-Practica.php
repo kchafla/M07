@@ -31,6 +31,7 @@
 			$espai++;
 		}
 		echo "</table>";
+		echo "me parece bien";
 	?>
 </body>
 </html>
