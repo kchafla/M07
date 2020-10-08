@@ -42,7 +42,7 @@
 <body>
     <div style="margin: 30px 10%;">
         <h3>Formulario</h3>
-        <form enctype="multipart/form-data" action="processa_dades.php" method="post" id="myform" name="myform">
+        <form enctype="multipart/form-data" action="formulari.php" method="post" id="myform" name="myform">
 
             <label>Texto </label><input type="text" value="" size="30" maxlength="100" name="mytext" id="" /><br/><br/>
 
