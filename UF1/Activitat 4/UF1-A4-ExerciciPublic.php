@@ -1,10 +1,11 @@
 <?php
     session_start();
+    include "../funcions.php";
 
     if($_SERVER["REQUEST_METHOD"] == "POST") {
-        if ($_REQUEST["user"] == "kchaflam@fp.insjoaquimmir.cat" && $_REQUEST["password"] == "alumne") {
-            $_SESSION["user"] = $_REQUEST["user"];
-            $_SESSION["password"] = $_REQUEST["password"];
+        if (comprovar_email($_REQUEST["user"]) && contra($_REQUEST["password"])) {
+            $_SESSION["user"] = comprovar_campo($_REQUEST["user"]);
+            $_SESSION["password"] = comprovar_campo($_REQUEST["password"]);
             header("Location: UF1-A4-ExerciciPrivat.php");
         } else {
             echo "Datos incorrectos!";
