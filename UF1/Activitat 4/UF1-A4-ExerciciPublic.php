@@ -1,11 +1,10 @@
 <?php
-
     session_start();
 
     if($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($_REQUEST["user"] == "kchaflam@fp.insjoaquimmir.cat" && $_REQUEST["password"] == "alumne") {
-            $_SESSION["user"] == $_REQUEST["user"];
-            $_SESSION["password"] == $_REQUEST["password"];
+            $_SESSION["user"] = $_REQUEST["user"];
+            $_SESSION["password"] = $_REQUEST["password"];
             header("Location: UF1-A4-ExerciciPrivat.php");
         } else {
             echo "Datos incorrectos!";
