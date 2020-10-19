@@ -25,8 +25,6 @@
         if (move_uploaded_file($_FILES['myfile']['tmp_name'], $fichero_subido)) {
             echo "La imagen se ha subido correctamente.<br/>";
             echo "<img src=\"imagenes/".$_FILES['myfile']['name']."\"/>";
-        } else {
-            echo "No se ha podido subir la imagen.";
         }
         
     } else {
