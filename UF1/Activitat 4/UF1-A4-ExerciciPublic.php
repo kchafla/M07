@@ -3,12 +3,12 @@
     include "../funcions.php";
 
     if($_SERVER["REQUEST_METHOD"] == "POST") {
-        if (comprovar_email($_REQUEST["user"]) && contra($_REQUEST["password"])) {
+        if (comprovar_email($_REQUEST["user"]) && comprovar_contra($_REQUEST["password"])) {
             $_SESSION["user"] = comprovar_campo($_REQUEST["user"]);
             $_SESSION["password"] = comprovar_campo($_REQUEST["password"]);
             header("Location: UF1-A4-ExerciciPrivat.php");
         } else {
-            echo "Datos incorrectos!";
+            echo "<p>Datos incorrectos!</p>";
         }
     }
 

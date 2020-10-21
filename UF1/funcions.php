@@ -8,21 +8,21 @@ function comprovar_campo($campo) {
 }
 
 function comprovar_email($email) {
-    $email = test_input($email);
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $emailError = true;
+    $email = comprovar_campo($email);
+    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $emailError = True;
     } else {
-        $emailError = false;
+        $emailError = False;
     }
     return $emailError;
 }
 
 function comprovar_contra($contra) {
-    $contra = test_input($contra);
-    if (!preg_match("/[a-zA-Z0-9]*/",$contra)) {
-        $contraError = true;
+    $contra = comprovar_campo($contra);
+    if (!preg_match("/[^a-zA-Z\d]/",$contra)) {
+        $contraError = True;
     } else {
-        $contraError = false;
+        $contraError = False;
     }
     return $contraError;
 }
