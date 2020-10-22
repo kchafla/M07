@@ -21,9 +21,13 @@
             }
         } else {
             if (comprovar_email($_REQUEST["user"]) && comprovar_contra($_REQUEST["password"])) {
-                $_SESSION["user"] = comprovar_campo($_REQUEST["user"]);
-                $_SESSION["password"] = comprovar_campo($_REQUEST["password"]);
-                header("Location: UF1-A4-ExerciciPrivat.php");
+                if ($_REQUEST["recordar"] == 1) {
+                    echo "<p>hola</p>";
+                } else {
+                    $_SESSION["user"] = comprovar_campo($_REQUEST["user"]);
+                    $_SESSION["password"] = comprovar_campo($_REQUEST["password"]);
+                    header("Location: UF1-A4-ExerciciPrivat.php");
+                }
             } else {
                 echo "<p>Datos incorrectos!</p>";
             }
@@ -34,8 +38,8 @@
 ?>
 <form method="post">
     <label>Email: </label><input type="text" name="user"/><br>
-    <label>Contraseña: </label><input type="password" name="password"/><br>
-    <label>Recordar contraseña?</label><input type="checkbox" name="recordar" value="1"/><br>
+    <label>Contraseña: </label><input type="password" name="password"/><br><br>
+    <label>Recordar contraseña?</label><input type="checkbox" name="recordar" value="1"/><br><br>
     <button type="submit">Iniciar sesión</button>
 </form>
 <?php
