@@ -10,7 +10,7 @@
 </head>
 <body>
 <?php
-    include "../funcions.php";
+    include "funcions.php";
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_REQUEST["aceptar"])) {
             if ($_REQUEST["aceptar"] == "Si") {
@@ -21,15 +21,15 @@
             }
         } else {
             if (comprovar_email($_REQUEST["user"]) && comprovar_contra($_REQUEST["password"])) {
-                if ($_REQUEST["recordar"] == 1) {
-                    echo "<p>hola</p>";
-                } else {
+                if ($_REQUEST["user"] == "kchaflam@fp.insjoaquimmir.cat" && $_REQUEST["password"] == "alumne123") {
                     $_SESSION["user"] = comprovar_campo($_REQUEST["user"]);
                     $_SESSION["password"] = comprovar_campo($_REQUEST["password"]);
                     header("Location: UF1-A4-ExerciciPrivat.php");
+                } else {
+                    echo "<p>Datos incorrectos!</p>";
                 }
             } else {
-                echo "<p>Datos incorrectos!</p>";
+                echo "<p>Has escrito el correo/contraseña incorrectamente!</p>";
             }
         }
     }
