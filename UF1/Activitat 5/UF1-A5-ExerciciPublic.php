@@ -1,23 +1,5 @@
 <?php
     session_start();
-
-    $conn = new mysqli('localhost', 'kchafla', 'kchafla', 'kchafla_Activitat05');
-
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    $sql = "SELECT * FROM Usuarios";
-    $result = $conn->prepare($sql);
-    if (!$result = $mysqli->query($sql)) {
-        die("Error al ejecutar la consulta: ".$mysqli->error)
-    }
-
-    if ($result->num_rows >= 0) {
-        while ($usuario = $result->fetch_assoc()) {
-            echo $usuario["user"];
-        }
-    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,6 +13,10 @@
     include "funcions.php";
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (isset($_REQUEST["registrarse"])) {
+            header("Location: UF1-A5-ExerciciRegistre.php");
+        }
+
         if (isset($_REQUEST["aceptar"])) {
             if ($_REQUEST["aceptar"] == "Si") {
                 setcookie("aceptado", 1, time() + 365 * 24 * 60 * 60);
@@ -39,17 +25,33 @@
                 header("Location: https://www.google.es");
             }
         } else {
-            if (comprovar_email($_REQUEST["user"]) && comprovar_contra($_REQUEST["password"])) {
-                if ($_REQUEST["user"] == "kchaflam@fp.insjoaquimmir.cat" && $_REQUEST["password"] == "alumne123") {
-                    $_SESSION["user"] = comprovar_campo($_REQUEST["user"]);
-                    $_SESSION["password"] = comprovar_campo($_REQUEST["password"]);
-                    header("Location: UF1-A5-ExerciciPrivat.php");
+            $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+            $user = $_REQUEST["user"];
+            $password = $_REQUEST["password"];
+            
+            $sql = "SELECT * FROM Usuarios WHERE user='$user' and password='$password'";
+            $result = $conn->prepare($sql);
+            if (!$result = $conn->query($sql)) {
+                die("Error al ejecutar la consulta: ".$mysqli->error);
+            }
+
+            if (comprovar_email($user) && comprovar_contra($password)) {
+                if ($result->num_rows > 0) {
+                    while ($usuario = $result->fetch_assoc()) {
+                        $_SESSION["user"] = comprovar_campo($usuario["user"]);
+                        $_SESSION["password"] = comprovar_campo($usuario["password"]);
+                        $conn->close();
+                        header("Location: UF1-A5-ExerciciPrivat.php");
+                    }
                 } else {
                     echo "<p>Datos incorrectos!</p>";
                 }
             } else {
                 echo "<p>Has escrito el correo/contraseña incorrectamente!</p>";
             }
+            
+            $conn->close();
         }
     }
 
@@ -60,7 +62,9 @@
     <label>Contraseña: </label><input type="password" name="password"/><br><br>
     <label>Recordar contraseña?</label><input type="checkbox" name="recordar" value="1"/><br><br>
     <button type="submit">Iniciar sesión</button>
+    <button type="submit" name="registrarse" value="Si">Registrarse</button>
 </form>
+
 <?php
     } else {
 ?>
