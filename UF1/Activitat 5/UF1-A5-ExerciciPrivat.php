@@ -10,45 +10,32 @@
 </head>
 <body>
 <?php
+    include "funcions.php";
+
     if($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_REQUEST["salir"])) {
-            session_unset();
-            session_regenerate_id();
-            session_destroy();
-            header("Location: UF1-A5-ExerciciPublic.php");
+            cerrar_session();
         }
-
         if (isset($_REQUEST["password"]) && isset($_REQUEST["newuser"]) && isset($_REQUEST["newpassword"])) {
-            $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
-
-            $password = $_REQUEST["password"];
-            $user = $_SESSION["user"];
-            if ($password != $_SESSION["password"]) {
-                echo "<p>La contraseña no coincide!</p>";
-            } else {
-                $newuser = $_REQUEST["newuser"];
-                $newpassword = $_REQUEST["newpassword"];
-
-                $sql = "UPDATE Usuarios SET user='$newpassword' and password='$newpassword' WHERE user='$user' and password='$password'";
-                if (!$result = $conn->query($sql)) {
-                    die("Error al ejecutar la actualizacion: ".$mysqli->error);
-                }
-
-                echo "usuario actualizado!";
-            }
+            modificar_usuario();
         }
     }
     
     if (isset($_SESSION["user"]) && isset($_SESSION["password"])) {
-        echo "<p>Hola ".$_SESSION["user"]."!</p><br>";
+        echo "<h2>Hola ".$_SESSION["user"]."!</h2><br>";
 ?>
-<h3>Modificar tus datos:</h3>
+<table border="1">
+        <tr><th colspan="2">Modificar tus datos</th></tr>
+        <tr><td colspan="2" style="text-align: center;">Es necessario poner tu contraseña.</td></tr>
+        <form method="post">
+            <tr><td style="text-align: right;"><label>Tu contraseña: </label></td><td><input type="password" name="password"></td></tr>
+            <tr><td style="text-align: right;"><label>Nuevo correo: </label></td><td><input type="text" name="newuser"></td></tr>
+            <tr><td style="text-align: right;"><label>Nueva contraseña: </label></td><td><input type="password" name="newpassword"></td></tr>
+            <tr><td colspan="2" style="text-align: center;"><label><button type="submit">Modificar</button></label></td></tr>
+        </form>
+</table><br>
 <form method="post">
-    <label>Tu contraseña: </label><input type="password" name="password"><br>
-    <label>Nuevo correo: </label><input type="text" name="newuser"><br>
-    <label>Nueva contraseña: </label><input type="password" name="newpassword"><br>
-    <button type="submit">Modificar</button><br><br><br>
-    <button type="submit" name="salir" value="si">Salir</button>
+    <h3>Cerrar sesion: <button type="submit" name="salir" value="si">Salir</button></h3>
 </form>
 <?php
     } else {

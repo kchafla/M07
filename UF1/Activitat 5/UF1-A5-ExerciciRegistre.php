@@ -13,13 +13,23 @@
     include "funcions.php";
     
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (isset($_REQUEST["salir"])) {
+            header("Location: UF1-A5-ExerciciPublic.php");
+        }
         
+        registrar_usuario($_REQUEST["registroEmail"], md5($_REQUEST["registroPassword"]));
     }
 ?>
+<table border="1">
+    <tr><th colspan="2">Registrar usuario</th></tr>
+    <form method="post">
+        <tr><td style="text-align: right;"><label>Tu mail: </label></td><td><input type="text" name="registroEmail"></td></tr>
+        <tr><td style="text-align: right;"><label>Tu contraseña: </label></td><td><input type="password" name="registroPassword"></td></tr>
+        <tr><td colspan="2" style="text-align: center;"><button type="submit">Registrarse</button></td></tr>
+    </form>
+</table><br>
 <form method="post">
-    <label>Tu mail: </label><input type="text" name="registroEmail"><br>
-    <label>Tu contraseña: </label><input type="text" name="registroPassword"><br><br>
-    <button type="submit">Registrarse</button>
+    <h3>Volver al menu: <button type="submit" name="salir" value="si">Menu</button></h3>
 </form>
 </body>
 </html>

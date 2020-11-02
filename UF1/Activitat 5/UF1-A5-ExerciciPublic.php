@@ -18,53 +18,25 @@
         }
 
         if (isset($_REQUEST["aceptar"])) {
-            if ($_REQUEST["aceptar"] == "Si") {
-                setcookie("aceptado", 1, time() + 365 * 24 * 60 * 60);
-                header("Location: UF1-A5-ExerciciPublic.php");
-            } else {
-                header("Location: https://www.google.es");
-            }
+            crear_cookie($_REQUEST["aceptar"]);
         } else {
-            $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
-
-            $user = $_REQUEST["user"];
-            $password = $_REQUEST["password"];
-            
-            $sql = "SELECT * FROM Usuarios WHERE user='$user' and password='$password'";
-            $result = $conn->prepare($sql);
-            if (!$result = $conn->query($sql)) {
-                die("Error al ejecutar la consulta: ".$mysqli->error);
-            }
-
-            if (comprovar_email($user) && comprovar_contra($password)) {
-                if ($result->num_rows > 0) {
-                    while ($usuario = $result->fetch_assoc()) {
-                        $_SESSION["user"] = comprovar_campo($usuario["user"]);
-                        $_SESSION["password"] = comprovar_campo($usuario["password"]);
-                        $conn->close();
-                        header("Location: UF1-A5-ExerciciPrivat.php");
-                    }
-                } else {
-                    echo "<p>Datos incorrectos!</p>";
-                }
-            } else {
-                echo "<p>Has escrito el correo/contraseña incorrectamente!</p>";
-            }
-            
-            $conn->close();
+            iniciar_sesion($_REQUEST["user"], md5($_REQUEST["password"]));
         }
     }
 
     if (isset($_COOKIE["aceptado"])) {
 ?>
+<table border="1">
+    <tr><th colspan="2">Iniciar sesion</th></tr>
+    <form method="post">
+        <tr><td style="text-align: right;"><label>Email: </label></td><td><input type="text" name="user"/></td></tr>
+        <tr><td style="text-align: right;"><label>Contraseña: </label></td><td><input type="password" name="password"/></td></tr>
+        <tr><td colspan="2" style="text-align: center;"><button type="submit">Iniciar sesión</button></td></tr>
+    </form>
+</table><br>
 <form method="post">
-    <label>Email: </label><input type="text" name="user"/><br>
-    <label>Contraseña: </label><input type="password" name="password"/><br><br>
-    <label>Recordar contraseña?</label><input type="checkbox" name="recordar" value="1"/><br><br>
-    <button type="submit">Iniciar sesión</button>
-    <button type="submit" name="registrarse" value="Si">Registrarse</button>
+    <h3>Registrarse: <button type="submit" name="registrarse" value="Si">Registrarse</button></h3>
 </form>
-
 <?php
     } else {
 ?>
