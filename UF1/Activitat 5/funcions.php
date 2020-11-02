@@ -36,6 +36,13 @@ function crear_cookie($aceptado) {
     }
 }
 
+function cerrar_session() {
+    session_unset();
+    session_regenerate_id();
+    session_destroy();
+    header("Location: UF1-A5-ExerciciPublic.php");
+}
+
 function iniciar_sesion($user, $password) {
     if (comprovar_email($user) && comprovar_contra($password)) {
         $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
@@ -44,12 +51,13 @@ function iniciar_sesion($user, $password) {
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
-            while ($usuario = $result->fetch_assoc()) {
-                $_SESSION["user"] = comprovar_campo($usuario["user"]);
-                $_SESSION["password"] = md5(comprovar_campo($usuario["password"]));
-                $conn->close();
-                header("Location: UF1-A5-ExerciciPrivat.php");
-            }
+            $usuario = $result->fetch_assoc();
+            $_SESSION["user"] = comprovar_campo($usuario["user"]);
+            $_SESSION["password"] = comprovar_campo($usuario["password"]);
+
+            $conn->close();
+
+            header("Location: UF1-A5-ExerciciPrivat.php");
         } else {
             echo "<p>Datos incorrectos!</p>";
         }
@@ -58,22 +66,7 @@ function iniciar_sesion($user, $password) {
     }
 }
 
-function cerrar_session() {
-    session_unset();
-    session_regenerate_id();
-    session_destroy();
-    header("Location: UF1-A5-ExerciciPublic.php");
-}
-
-function modificar_usuario() {
-    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
-
-    $password = $_REQUEST["password"];
-    $user = $_SESSION["user"];
-
-    $newuser = $_REQUEST["newuser"];
-    $newpassword = $_REQUEST["newpassword"];
-
+function modificar_usuario($user, $password, $newuser ,$newpassword) {
     if ($password != $_SESSION["password"]) {
         echo "<p>La contraseña no coincide!</p>";
     } else if (!comprovar_email($newuser)) {
@@ -81,11 +74,23 @@ function modificar_usuario() {
     } else if (!comprovar_contra($newpassword)) {
         echo "<p>No has escrito la nueva contraseña correctamente!</p>";
     } else {
-        $sql = "UPDATE Usuarios SET user='$newuser' and password='$newpassword' WHERE user='$user'";
-        if (!$result = $conn->query($sql)) {
-            die("Error al ejecutar la actualizacion: ".$conn->error);
-        }
-       echo "Usuario actualizado!";
+        $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+        $sql = "SELECT * FROM Usuarios WHERE user='$user' and password='$password'";
+        $result = $conn->query($sql);
+        $usuario = $result->fetch_assoc();
+        $id = $usuario["id"];
+
+        $sql = "UPDATE Usuarios SET user='$newuser' WHERE id=$id";
+        $result = $conn->query($sql);
+        $sql = "UPDATE Usuarios SET password='$newpassword' WHERE id=$id";
+        $result = $conn->query($sql);
+
+        $conn->close();
+
+        $_SESSION["user"] = $newuser;
+        $_SESSION["password"] = $newpassword;
+        echo "Usuario actualizado!";
     }
 }
 
@@ -102,6 +107,7 @@ function registrar_usuario($user, $password) {
 
         if ($result->num_rows == 0) {
             $sql = "SELECT MAX(id)+1 FROM Usuarios AS siguienteid";
+
             $result = $conn->query($sql);
             $siguienteid = array_values($result->fetch_assoc());
             $id = $siguienteid[0];

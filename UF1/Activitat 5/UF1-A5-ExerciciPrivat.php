@@ -16,8 +16,9 @@
         if (isset($_REQUEST["salir"])) {
             cerrar_session();
         }
+        
         if (isset($_REQUEST["password"]) && isset($_REQUEST["newuser"]) && isset($_REQUEST["newpassword"])) {
-            modificar_usuario();
+            modificar_usuario($_SESSION["user"], md5($_REQUEST["password"]), $_REQUEST["newuser"], md5($_REQUEST["newpassword"]));
         }
     }
     
