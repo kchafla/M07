@@ -104,21 +104,28 @@ function modificar_usuario($user, $password, $newuser ,$newpassword) {
     } else {
         $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
 
-        $sql = "SELECT * FROM Usuarios WHERE user='$user' and password='$password'";
-        $result = $conn->query($sql);
-        $usuario = $result->fetch_assoc();
-        $id = $usuario["id"];
-
-        $sql = "UPDATE Usuarios SET user='$newuser' WHERE id=$id";
-        $result = $conn->query($sql);
-        $sql = "UPDATE Usuarios SET password='$newpassword' WHERE id=$id";
+        $sql = "SELECT user FROM Usuarios WHERE user='$newuser'";
         $result = $conn->query($sql);
 
-        $conn->close();
+        if ($result->num_rows == 0) {
+            $sql = "SELECT * FROM Usuarios WHERE user='$user'";
+            $result = $conn->query($sql);
+            $usuario = $result->fetch_assoc();
+            $id = $usuario["id"];
 
-        $_SESSION["user"] = $newuser;
-        $_SESSION["password"] = $newpassword;
-        echo "Usuario actualizado!";
+            $sql = "UPDATE Usuarios SET user='$newuser' WHERE id=$id";
+            $result = $conn->query($sql);
+            $sql = "UPDATE Usuarios SET password='$newpassword' WHERE id=$id";
+            $result = $conn->query($sql);
+
+            $conn->close();
+
+            $_SESSION["user"] = $newuser;
+            $_SESSION["password"] = $newpassword;
+            echo "Usuario actualizado!";
+        } else {
+            echo "<p>Ya existe un usuario con ese correo!</p>";
+        }
     }
 }
 
@@ -206,16 +213,23 @@ function modificar_usuario_admin($id, $user, $password, $rol) {
     } else {
         $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
 
-        $sql = "UPDATE Usuarios SET user='$user' WHERE id=$id";
-        $result = $conn->query($sql);
-        $sql = "UPDATE Usuarios SET password='$password' WHERE id=$id";
-        $result = $conn->query($sql);
-        $sql = "UPDATE Usuarios SET role='$rol' WHERE id=$id";
+        $sql = "SELECT user FROM Usuarios WHERE user='$user'";
         $result = $conn->query($sql);
 
-        $conn->close();
+        if ($result->num_rows == 0) {
+            $sql = "UPDATE Usuarios SET user='$user' WHERE id=$id";
+            $result = $conn->query($sql);
+            $sql = "UPDATE Usuarios SET password='$password' WHERE id=$id";
+            $result = $conn->query($sql);
+            $sql = "UPDATE Usuarios SET role='$rol' WHERE id=$id";
+            $result = $conn->query($sql);
 
-        echo "Usuario actualizado!";
+            $conn->close();
+
+            echo "Usuario actualizado!";
+        } else {
+            echo "Ya existe un usuario con ese correo!";
+        }
     }
 }
 ?>
