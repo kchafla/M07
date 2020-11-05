@@ -69,7 +69,7 @@ function iniciar_sesion($user, $password) {
     }
 }
 
-function registrar_usuario($user, $password) {
+function registrar_usuario($user, $password, $rol) {
     if (!comprovar_email($user)) {
         echo "<p>No has escrito el correo correctamente!</p>";
     } else if (!comprovar_contra($password)) {
@@ -81,7 +81,7 @@ function registrar_usuario($user, $password) {
         $result = $conn->query($sql);
 
         if ($result->num_rows == 0) {
-            $sql = "INSERT INTO Usuarios VALUES (NULL,'$user','$password',2)";
+            $sql = "INSERT INTO Usuarios VALUES (NULL,'$user','$password',$rol)";
             if ($conn->query($sql) === TRUE) {
                 echo "<p>Usuario registrado con exito!</p>";
             } else {
@@ -124,40 +124,98 @@ function modificar_usuario($user, $password, $newuser ,$newpassword) {
 
 function generar_tabla_admin() {
     echo "<table border='1'>";
-    echo "<tr><th>ID</th><th>CORREO</th><th>CONTRASEÑA</th><th>ROL</th></th><th>MODIFICAR</th></th><th>BORRAR</th></tr>";
+    echo "<tr><th>ID</th><th>CORREO</th><th>CONTRASEÑA</th><th>ROL</th></th><th colspan='2'>ACCION</th></tr>";
     $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
     
     $nombres = Array();
     $rol = Array();
+    $id = Array();
 
-    $sql = "SELECT user, role FROM Usuarios";
+    $sql = "SELECT id, user, role FROM Usuarios";
     $result = $conn->query($sql);
 
-    while($usuario = $result->fetch_assoc()){
+    while($usuario = $result->fetch_assoc()) {
         $nombres[] = $usuario["user"];
         $rol[] = $usuario["role"];
+        $id[] = $usuario["id"];
     }
 
     for ($n=0; $n < count($nombres); $n++) { 
         echo "<form method='post'>";
         echo "<tr>
-                <td>".($n+1)."</td>
-                <td><input type='text' name='newuser' value='".$nombres[$n]."'></td>
-                <td><input type='password' name='newpassword'></td>";
+            <td><input size='1' type='text' name='id' value='".$id[$n]."' readonly></td>
+            <td><input type='text' name='newuser' value='".$nombres[$n]."'></td>
+            <td><input type='password' name='newpassword'></td>";
+
                 if ($n == 0) {
                     echo "<td><select name='newrol' disabled><option value='1' selected>Administrador</option><option value='2'>Usuario</option></select></td>";
+                    echo "<input type='hidden' name='newrol' value='1' />";
                 } else {
                     if ($rol[$n] == 1) {
                         echo "<td><select name='newrol'><option value='1' selected>Administrador</option><option value='2'>Usuario</option></select></td>";
                     } elseif ($rol[$n] == 2) {
                         echo "<td><select name='newrol'><option value='1'>Administrador</option><option value='2' selected>Usuario</option></select></td>";
                     }
-                }  
-        echo    "<td><button type='submit' name='modificar' value='si'>Modificar</button></td>
-                <td><button type='submit' name='borrar' value='si'>Eliminar</button></td>
-            </tr>";
+                }
+
+                if ($n == 0) {
+                    echo "<td colspan='2' style='text-align: center;'><button type='submit' name='modificar' value='si'>Modificar</button></td>";
+                } else if ($n != 0) {
+                    echo "<td><button type='submit' name='modificar' value='si'>Modificar</button></td>
+                        <td><button type='submit' name='borrar' value='si'>Eliminar</button></td>";
+                }
+        echo "</tr>";
         echo "</form>";
     }
-    echo "</table>";
+    echo "</table><br>";
+
+    echo "<h3>Crear usuario:</h3>";
+    echo "<table border='1'>
+            <form method='post'>
+                <tr><th>CORREO</th><th>CONTRASEÑA</th><th>ROL</th></th><th>ACCION</th></tr>
+                <td><input type='text' name='reguser'></td>
+                <td><input type='password' name='regpassword'></td>
+                <td><select name='regrol'><option value='1'>Administrador</option><option value='2' selected>Usuario</option></select></td>
+                <td><button type='submit' name='crear' value='si'>Crear</button></td>
+            </form>
+        </table>";
+}
+
+function borrar_usuario($user) {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "SELECT id FROM Usuarios WHERE user='$user'";
+    $result = $conn->query($sql);
+    $usuario = $result->fetch_assoc();
+    $id = $usuario["id"];
+
+    $sql = "DELETE FROM Usuarios WHERE id='$id'";
+    $result = $conn->query($sql);
+    $conn->close();
+
+    echo "Usuario eliminado!";
+}
+
+function modificar_usuario_admin($id, $user, $password, $rol) {
+    if (!comprovar_email($user)) {
+        echo "<p>No has escrito el correo a modificar correctamente!</p>";
+    } else if (empty($password)) {
+        echo "<p>No has escrito la nueva contraseña!</p>";
+    } else if (!comprovar_contra($password)) {
+        echo "<p>No has escrito la nueva contraseña correctamente!</p>";
+    } else {
+        $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+        $sql = "UPDATE Usuarios SET user='$user' WHERE id=$id";
+        $result = $conn->query($sql);
+        $sql = "UPDATE Usuarios SET password='$password' WHERE id=$id";
+        $result = $conn->query($sql);
+        $sql = "UPDATE Usuarios SET role='$rol' WHERE id=$id";
+        $result = $conn->query($sql);
+
+        $conn->close();
+
+        echo "Usuario actualizado!";
+    }
 }
 ?>

@@ -17,7 +17,7 @@
             header("Location: UF1-A5-ExerciciPublic.php");
         }
         
-        registrar_usuario($_REQUEST["registroEmail"], md5($_REQUEST["registroPassword"]));
+        registrar_usuario($_REQUEST["registroEmail"], md5($_REQUEST["registroPassword"]), 2);
     }
 ?>
 <table border="1">

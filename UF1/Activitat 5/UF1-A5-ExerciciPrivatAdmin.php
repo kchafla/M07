@@ -16,10 +16,15 @@
         if (isset($_REQUEST["salir"])) {
             cerrar_session();
         }
-        
-        if (isset($_REQUEST["password"]) && isset($_REQUEST["newuser"]) && isset($_REQUEST["newpassword"])) {
-            modificar_usuario($_SESSION["user"], md5($_REQUEST["password"]), $_REQUEST["newuser"], md5($_REQUEST["newpassword"]));
+
+        if (isset($_REQUEST["modificar"])) {
+            modificar_usuario_admin($_REQUEST['id'], $_REQUEST['newuser'], $_REQUEST['newpassword'], $_REQUEST['newrol']);
+        } else if (isset($_REQUEST["borrar"])) {
+            borrar_usuario($_REQUEST["newuser"]);
+        } else if (isset($_REQUEST["crear"])) {
+            registrar_usuario($_REQUEST["reguser"], md5($_REQUEST["regpassword"]), $_REQUEST["regrol"]);
         }
+        
     }
     
     if (isset($_SESSION["user"]) && isset($_SESSION["password"])) {
