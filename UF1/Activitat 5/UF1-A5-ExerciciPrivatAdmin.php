@@ -18,7 +18,7 @@
         }
 
         if (isset($_REQUEST["modificar"])) {
-            modificar_usuario_admin($_REQUEST['id'], $_REQUEST['newuser'], $_REQUEST['newpassword'], $_REQUEST['newrol']);
+            modificar_usuario_admin($_REQUEST['id'], $_REQUEST['newuser'], md5($_REQUEST['newpassword']), $_REQUEST['newrol']);
         } else if (isset($_REQUEST["borrar"])) {
             borrar_usuario($_REQUEST["newuser"]);
         } else if (isset($_REQUEST["crear"])) {
