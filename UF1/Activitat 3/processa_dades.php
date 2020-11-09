@@ -27,5 +27,5 @@
     } else {
         echo "No se ha podido subir la imagen.";
     }
-
+    
 ?>
