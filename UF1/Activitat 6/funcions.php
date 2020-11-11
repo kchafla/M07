@@ -263,17 +263,31 @@ function subir_producto($nom, $descripcion, $precio, $usuario) {
 }
 
 function modificar_producto($id, $nom, $desc, $preu) {
+    if (!is_numeric($preu)) {
+        echo "<p>Para modificar el precio, escribe solo el numero (sin €)!</p>";
+    } else {
+        $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+        $sql = "UPDATE Productos SET nom='$nom' WHERE id=$id";
+        $result = $conn->query($sql);
+        $sql = "UPDATE Productos SET descripcio='$desc' WHERE id=$id";
+        $result = $conn->query($sql);
+        $sql = "UPDATE Productos SET preu='$preu' WHERE id=$id";
+        $result = $conn->query($sql);
+
+        $conn->close();
+        echo "Producto actualizado!";
+    }
+}
+
+function borrar_producto($id) {
     $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
 
-    $sql = "UPDATE Productos SET nom='$nom' WHERE id=$id";
+    $sql = "DELETE FROM Productos WHERE id='$id'";
     $result = $conn->query($sql);
-    $sql = "UPDATE Productos SET descripcio='$desc' WHERE id=$id";
-    $result = $conn->query($sql);
-    $sql = "UPDATE Productos SET preu='$preu' WHERE id=$id";
-    $result = $conn->query($sql);
-
     $conn->close();
-    echo "Producto actualizado!";
+
+    echo "Producto eliminado!";
 }
 
 function tabla_productos_usuario($user) {
@@ -310,7 +324,39 @@ function tabla_productos_usuario($user) {
             echo "</form>";
         }
     } else {
-        echo "<tr><td colspan='3' style='text-align: center;'><p>No tienes ningun producto!</p></td></tr>";
+        echo "<tr><td colspan='5' style='text-align: center;'><p>No tienes ningun producto!</p></td></tr>";
+    }
+    
+    echo "</table><br>";
+}
+
+function tabla_productos() {
+    echo "<table border='1'>";
+    echo "<tr><th>NOMBRE</th><th>DESCRIPCION</th><th>PRECIO</th></tr>";
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "SELECT * FROM Productos";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        while($producto = $result->fetch_assoc()) {
+            $nombre[] = $producto["nom"];
+            $desc[] = $producto["descripcio"];
+            $precio[] = $producto["preu"];
+            $ids[] = $producto["id"];
+        }
+    
+        for ($n=0; $n < count($nombre); $n++) {
+            echo "<form method='post'>";
+            echo "<tr>
+                <td><input type='text' name='nomprod' value='".$nombre[$n]."' readonly></td>
+                <td><textarea style='resize: none;' name='descprod' cols='60' rows='3' readonly>".$desc[$n]."</textarea></td>
+                <td><input type='text' name='preuprod' value='".$precio[$n]."€' readonly></td>";
+            echo "</tr>";
+            echo "</form>";
+        }
+    } else {
+        echo "<tr><td colspan='3' style='text-align: center;'><p>No hay productos registrados!</p></td></tr>";
     }
     
     echo "</table><br>";

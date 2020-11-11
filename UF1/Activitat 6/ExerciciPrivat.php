@@ -32,6 +32,10 @@
         if (isset($_REQUEST["modificarprod"])) {
             modificar_producto($_REQUEST["idprod"], $_REQUEST["nomprod"], $_REQUEST["descprod"], $_REQUEST["preuprod"]);
         }
+
+        if (isset($_REQUEST["borrarprod"])) {
+            borrar_producto($_REQUEST["idprod"]);
+        }
     }
     
     if (isset($_SESSION["user"]) && isset($_SESSION["password"])) {

@@ -36,8 +36,10 @@
 </table><br>
 <form method="post">
     <h3>Registrarse: <button type="submit" name="registrarse" value="Si">Registrarse</button></h3>
-</form>
+</form><br>
+<h1>Todos los productos:</h1>
 <?php
+    tabla_productos();
     } else {
 ?>
 <form method="post">
