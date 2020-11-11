@@ -261,4 +261,58 @@ function subir_producto($nom, $descripcion, $precio, $usuario) {
         $conn->close();
     }
 }
+
+function modificar_producto($id, $nom, $desc, $preu) {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "UPDATE Productos SET nom='$nom' WHERE id=$id";
+    $result = $conn->query($sql);
+    $sql = "UPDATE Productos SET descripcio='$desc' WHERE id=$id";
+    $result = $conn->query($sql);
+    $sql = "UPDATE Productos SET preu='$preu' WHERE id=$id";
+    $result = $conn->query($sql);
+
+    $conn->close();
+    echo "Producto actualizado!";
+}
+
+function tabla_productos_usuario($user) {
+    echo "<table border='1'>";
+    echo "<tr><th>ID</th><th>NOMBRE</th><th>DESCRIPCION</th><th>PRECIO</th><th colspan='2'>ACCION</th></tr>";
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "SELECT * FROM Usuarios WHERE user='$user'";
+    $result = $conn->query($sql);
+    $usuario = $result->fetch_assoc();
+    $id = $usuario["id"];
+
+    $sql = "SELECT * FROM Productos WHERE idusuari='$id'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        while($producto = $result->fetch_assoc()) {
+            $nombre[] = $producto["nom"];
+            $desc[] = $producto["descripcio"];
+            $precio[] = $producto["preu"];
+            $ids[] = $producto["id"];
+        }
+    
+        for ($n=0; $n < count($nombre); $n++) {
+            echo "<form method='post'>";
+            echo "<tr>
+                <td><input size='1' type='text' name='idprod' value='".$ids[$n]."' readonly></td>
+                <td><input type='text' name='nomprod' value='".$nombre[$n]."'></td>
+                <td><textarea style='resize: none;' name='descprod' cols='60' rows='3'>".$desc[$n]."</textarea></td>
+                <td><input type='text' name='preuprod' value='".$precio[$n]."€'></td>
+                <td><button type='submit' name='modificarprod' value='si'>Modificar</button></td>
+                <td><button type='submit' name='borrarprod' value='si'>Eliminar</button></td>";
+            echo "</tr>";
+            echo "</form>";
+        }
+    } else {
+        echo "<tr><td colspan='3' style='text-align: center;'><p>No tienes ningun producto!</p></td></tr>";
+    }
+    
+    echo "</table><br>";
+}
 ?>
