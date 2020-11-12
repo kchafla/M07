@@ -332,7 +332,7 @@ function tabla_productos_usuario($user) {
 
 function tabla_productos() {
     echo "<table border='1'>";
-    echo "<tr><th>NOMBRE</th><th>DESCRIPCION</th><th>PRECIO</th></tr>";
+    echo "<tr><th>ID</th><th>NOMBRE</th><th>DESCRIPCION</th><th>PRECIO</th><th>ACCION</th></tr>";
     $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
 
     $sql = "SELECT * FROM Productos";
@@ -349,9 +349,11 @@ function tabla_productos() {
         for ($n=0; $n < count($nombre); $n++) {
             echo "<form method='post'>";
             echo "<tr>
+                <td><input size='1' type='text' name='idprod' value='".$ids[$n]."' readonly></td>
                 <td><input type='text' name='nomprod' value='".$nombre[$n]."' readonly></td>
                 <td><textarea style='resize: none;' name='descprod' cols='60' rows='3' readonly>".$desc[$n]."</textarea></td>
-                <td><input type='text' name='preuprod' value='".$precio[$n]."€' readonly></td>";
+                <td><input type='text' name='preuprod' value='".$precio[$n]."€' readonly></td>
+                <td><button type='submit' name='info' value='Si'>Mas informacion</button></td>";
             echo "</tr>";
             echo "</form>";
         }
@@ -360,5 +362,72 @@ function tabla_productos() {
     }
     
     echo "</table><br>";
+}
+
+function tabla_buscador($buscar) {
+    echo "<table border='1'>";
+    echo "<tr><th>ID</th><th>NOMBRE</th><th>DESCRIPCION</th><th>PRECIO</th><th>ACCION</th></tr>";
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "SELECT * FROM Productos WHERE LOWER(nom) LIKE '%{$buscar}%'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        while($producto = $result->fetch_assoc()) {
+            $nombre[] = $producto["nom"];
+            $desc[] = $producto["descripcio"];
+            $precio[] = $producto["preu"];
+            $ids[] = $producto["id"];
+        }
+    
+        for ($n=0; $n < count($nombre); $n++) {
+            echo "<form method='post'>";
+            echo "<tr>
+                <td><input size='1' type='text' name='idprod' value='".$ids[$n]."' readonly></td>
+                <td><input type='text' name='nomprod' value='".$nombre[$n]."' readonly></td>
+                <td><textarea style='resize: none;' name='descprod' cols='60' rows='3' readonly>".$desc[$n]."</textarea></td>
+                <td><input type='text' name='preuprod' value='".$precio[$n]."€' readonly></td>
+                <td><button type='submit' name='info' value='Si'>Mas informacion</button></td>";
+            echo "</tr>";
+            echo "</form>";
+        }
+    } else {
+        echo "<tr><td colspan='3' style='text-align: center;'><p>No hay productos registrados!</p></td></tr>";
+    }
+    
+    echo "</table><br>";
+}
+
+function informacion_producto($id) {
+    echo "<table border='1'>";
+    echo "<tr><th>NOMBRE</th><th>DESCRIPCION</th><th>PRECIO</th></tr>";
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "SELECT * FROM Productos WHERE id='$id'";
+    $result = $conn->query($sql);
+
+    while($producto = $result->fetch_assoc()) {
+        $nombre[] = $producto["nom"];
+        $desc[] = $producto["descripcio"];
+        $precio[] = $producto["preu"];
+        $ids[] = $producto["id"];
+    }
+
+    for ($n=0; $n < count($nombre); $n++) {
+        echo "<form method='post'>";
+        echo "<tr>
+            <td><input type='text' name='nomprod' value='".$nombre[$n]."' readonly></td>
+            <td><textarea style='resize: none;' name='descprod' cols='60' rows='3' readonly>".$desc[$n]."</textarea></td>
+            <td><input type='text' name='preuprod' value='".$precio[$n]."€' readonly></td>";
+        echo "</tr>";
+        echo "</form>";
+    }
+    
+    echo "</table><br>";
+}
+
+function ir_producto($id) {
+    $_SESSION["id"] = $id;
+    header("Location: ExerciciProducte.php");
 }
 ?>

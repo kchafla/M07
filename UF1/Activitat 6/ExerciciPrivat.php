@@ -26,11 +26,11 @@
         }
 
         if (isset($_REQUEST["producto"])) {
-            subir_producto($_REQUEST["prodnombre"], $_REQUEST["proddesc"], $_REQUEST["prodprecio"], $_SESSION["user"]);
+            subir_producto($_REQUEST["prodnombre"], $_REQUEST["proddesc"], round($_REQUEST["prodprecio"], 2), $_SESSION["user"]);
         }
         
         if (isset($_REQUEST["modificarprod"])) {
-            modificar_producto($_REQUEST["idprod"], $_REQUEST["nomprod"], $_REQUEST["descprod"], $_REQUEST["preuprod"]);
+            modificar_producto($_REQUEST["idprod"], $_REQUEST["nomprod"], $_REQUEST["descprod"], round($_REQUEST["preuprod"], 2));
         }
 
         if (isset($_REQUEST["borrarprod"])) {
