@@ -14,18 +14,14 @@
 
     if($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_REQUEST["volver"])) {
-            unset($_SESSION["id"]);
             header("Location: ExerciciPublic.php");
         }
-    }
-
-    if (isset($_SESSION["id"])) {
 ?>
 <form method="post">
     <h3>Volver a la pagina principal: <button type="submit" name="volver" value="Si">Menu</button></h3>
 </form>
 <?php
-        informacion_producto($_SESSION["id"]);
+        informacion_producto($_REQUEST["idprod"]);
     } else {
         header("Location: ExerciciPublic.php");
     }

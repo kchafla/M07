@@ -347,7 +347,7 @@ function tabla_productos() {
         }
     
         for ($n=0; $n < count($nombre); $n++) {
-            echo "<form method='post'>";
+            echo "<form action='ExerciciProducte.php' method='post'>";
             echo "<tr>
                 <td><input size='1' type='text' name='idprod' value='".$ids[$n]."' readonly></td>
                 <td><input type='text' name='nomprod' value='".$nombre[$n]."' readonly></td>
@@ -381,7 +381,7 @@ function tabla_buscador($buscar) {
         }
     
         for ($n=0; $n < count($nombre); $n++) {
-            echo "<form method='post'>";
+            echo "<form action='ExerciciProducte.php' method='post'>";
             echo "<tr>
                 <td><input size='1' type='text' name='idprod' value='".$ids[$n]."' readonly></td>
                 <td><input type='text' name='nomprod' value='".$nombre[$n]."' readonly></td>
@@ -424,10 +424,5 @@ function informacion_producto($id) {
     }
     
     echo "</table><br>";
-}
-
-function ir_producto($id) {
-    $_SESSION["id"] = $id;
-    header("Location: ExerciciProducte.php");
 }
 ?>

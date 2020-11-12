@@ -60,7 +60,6 @@
             <tr><td style="text-align: right;"><label>Nombre: </label></td><td><input type="text" name="prodnombre" size="28"></td></tr>
             <tr><td style="text-align: right;"><label>Descripcion: </label></td><td><textarea style='resize: none;' name="proddesc" cols="42" rows="5" maxlength="200"></textarea></td></tr>
             <tr><td style="text-align: right;"><label>Precio (€): </label></td><td><input type="text" name="prodprecio" size="28"></td></tr>
-            <tr><td style="text-align: right;"><label>Imagen: </label></td><td><input type="file" name="prodimg"></td></tr>
             <tr><td colspan="2" style="text-align: center;"><label><button type="submit" name="producto" value="Si">Subir</button></label></td></tr>
         </form>
 </table><br>

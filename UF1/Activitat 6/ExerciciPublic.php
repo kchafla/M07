@@ -24,10 +24,6 @@
         if (isset($_REQUEST["iniciar"])) {
             iniciar_sesion($_REQUEST["user"], md5($_REQUEST["password"]));
         }
-
-        if (isset($_REQUEST["info"])) {
-            ir_producto($_REQUEST["idprod"]);
-        }
     }
 
     if (isset($_COOKIE["aceptado"])) {
