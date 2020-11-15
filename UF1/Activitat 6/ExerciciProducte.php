@@ -22,6 +22,14 @@
 </form>
 <?php
         informacion_producto($_REQUEST["idprod"]);
+?>
+<h3>Categorias:</h3>
+<?php
+        ver_categorias($_REQUEST["idprod"]);
+?>
+<br><h3>Imagenes del producto:</h3>
+<?php    
+        tabla_imagenes($_REQUEST["idprod"]);
     } else {
         header("Location: ExerciciPublic.php");
     }

@@ -47,12 +47,22 @@
             <td><input type="text" name="buscar" placeholder="Buscar..."></td>
             <td><button type="submit" name="buscador" value="Si">Buscar!</button></td>
         </form>
+        <form method="post">
+            <td><label>Buscar por categoria: </label></td>
+            <td><select name="categoria">
+<?php
+            todas_categorias();
+?>
+            </select></td>
+            <td><button type="submit" name="buscadorcat" value="Si">Buscar!</button></td>
+        </form>
     </tr>
 </table><br>
-
 <?php
         if (isset($_REQUEST["buscador"])) {
             tabla_buscador(strtolower($_REQUEST["buscar"]));
+        } else if(isset($_REQUEST["buscadorcat"]) && $_REQUEST["categoria"] != "") {
+            tabla_buscador_categoria($_REQUEST["categoria"]);
         } else {
             tabla_productos();
         }

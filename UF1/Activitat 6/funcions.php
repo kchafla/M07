@@ -1,5 +1,4 @@
 <?php
-
 function comprovar_campo($campo) {
     $campo = trim($campo);
     $campo = stripslashes($campo);
@@ -292,7 +291,7 @@ function borrar_producto($id) {
 
 function tabla_productos_usuario($user) {
     echo "<table border='1'>";
-    echo "<tr><th>ID</th><th>NOMBRE</th><th>DESCRIPCION</th><th>PRECIO</th><th colspan='2'>ACCION</th></tr>";
+    echo "<tr><th>ID</th><th>NOMBRE</th><th>DESCRIPCION</th><th>PRECIO</th><th colspan='3'>ACCION</th></tr>";
     $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
 
     $sql = "SELECT * FROM Usuarios WHERE user='$user'";
@@ -318,10 +317,13 @@ function tabla_productos_usuario($user) {
                 <td><input type='text' name='nomprod' value='".$nombre[$n]."'></td>
                 <td><textarea style='resize: none;' name='descprod' cols='60' rows='3'>".$desc[$n]."</textarea></td>
                 <td><input type='text' name='preuprod' value='".$precio[$n]."€'></td>
-                <td><button type='submit' name='modificarprod' value='si'>Modificar</button></td>
-                <td><button type='submit' name='borrarprod' value='si'>Eliminar</button></td>";
+                <td><button type='submit' name='modificarprod' value='si'>Modificar producto</button></td>
+                <td><button type='submit' name='borrarprod' value='si'>Eliminar producto</button></td></form>
+                <form action='ExerciciImatges.php' method='post'>
+                    <input type='hidden' name='idprod' value='".$ids[$n]."'>
+                    <td><button type='submit' name='imagenesprod' value='si'>Imagenes/Categorias</button></td>
+                </form>";
             echo "</tr>";
-            echo "</form>";
         }
     } else {
         echo "<tr><td colspan='5' style='text-align: center;'><p>No tienes ningun producto!</p></td></tr>";
@@ -392,7 +394,7 @@ function tabla_buscador($buscar) {
             echo "</form>";
         }
     } else {
-        echo "<tr><td colspan='3' style='text-align: center;'><p>No hay productos registrados!</p></td></tr>";
+        echo "<tr><td colspan='5' style='text-align: center;'><p>No hay productos registrados!</p></td></tr>";
     }
     
     echo "</table><br>";
@@ -421,6 +423,270 @@ function informacion_producto($id) {
             <td><input type='text' name='preuprod' value='".$precio[$n]."€' readonly></td>";
         echo "</tr>";
         echo "</form>";
+    }
+    
+    echo "</table><br>";
+}
+
+function subir_imagen($id) {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+    $dir_subida = "imagenes/";
+    $nombre = $_FILES['myfile']['name'];
+    $ruta = $dir_subida.$nombre;
+
+    $sql = "SELECT * FROM Imagenes WHERE idproducte='$id' and ruta='$ruta'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows == 0) {
+        $fichero_subido = $dir_subida.basename($_FILES['myfile']['name']);
+        if (move_uploaded_file($_FILES['myfile']['tmp_name'], $fichero_subido)) {
+            $sql = "INSERT INTO Imagenes VALUES (NULL,'$nombre','$ruta', $id)";
+            if ($conn->query($sql) === TRUE) {
+                    echo "<p>Imagen registrada con exito!</p>";
+            }
+            $conn->close();
+        } else {
+            echo "No se ha podido subir la imagen.";
+        }
+    } else {
+        echo "<p>No puedes subir imagenes duplicadas o el fichero tiene el mismo nombre que una existente!</p>";
+    }
+}
+
+function tabla_imagenes($id) {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "SELECT * FROM Imagenes WHERE idproducte='$id'";
+    $result = $conn->query($sql);
+
+    echo "<table border='1'><tr>";
+    if ($result->num_rows > 0) {
+        while($producto = $result->fetch_assoc()) {
+            $ruta[] = $producto["ruta"];
+        }
+
+        for ($n=0; $n < count($ruta); $n++) {
+            echo "<td><img src='".$ruta[$n]."' width='250px' height='250px'></td>";
+            if ($n == 4) {
+                echo "</tr><tr>";
+            }
+        }
+    } else {
+        echo "<td>No hay imagenes disponibles para este producto!</td>";
+    }
+    echo "</tr></table'>";
+}
+
+function tabla_imagenes_usuario($id) {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "SELECT * FROM Imagenes WHERE idproducte='$id'";
+    $result = $conn->query($sql);
+
+    echo "<table border='1'>";
+    if ($result->num_rows > 0) {
+        while($producto = $result->fetch_assoc()) {
+            $ruta[] = $producto["ruta"];
+            $idimg[] = $producto["id"];
+        }
+
+        for ($n=0; $n < count($ruta); $n++) {
+            echo "<tr><td><img src='".$ruta[$n]."' width='250px' height='250px'></td>
+                <form method='post'>
+                    <input type='hidden' name='idprod' value='".$_REQUEST["idprod"]."'>
+                    <input type='hidden' name='idimg' value='".$idimg[$n]."'>
+                    <input type='hidden' name='ruta' value='".$ruta[$n]."'>
+                    <td><button type='submit' name='borrar' value='si'>Borrar imagen</button></td>
+                </form></tr>";
+        }
+    } else {
+        echo "<td>No hay imagenes disponibles para este producto!</td>";
+    }
+    echo "</tr></table'>";
+}
+
+function borrar_imagen($id, $ruta) {
+    unlink($ruta);
+
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "DELETE FROM Imagenes WHERE id='$id'";
+    $result = $conn->query($sql);
+    $conn->close();
+
+    echo "Imagen eliminada!";
+}
+
+function crear_categoria($nom) {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "INSERT INTO Categorias VALUES (NULL,'$nom')";
+
+    if ($conn->query($sql) === TRUE) {
+            echo "<p>Categoria creada con exito!</p>";
+    } else {
+            echo "Error: ".$sql."<br>".$conn->error;
+    }
+
+    $conn->close();
+}
+
+function producto_categoria($producte, $idcategoria) {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "INSERT INTO Categorias_Productos VALUES ('$idcategoria','$producte')";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "<p>Categoria añadida al producto con exito!</p>";
+    } else {
+        echo "<p>Este producto ya tiene esta categoria!</p>";
+    }
+
+    $conn->close();
+}
+
+function comprovar_existe_categoria($idproducte, $categoria) {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $categorialower = strtolower($categoria);
+    $sql = "SELECT * FROM Categorias WHERE LOWER(nom) LIKE '%{$categorialower}%'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows == 0) {
+        crear_categoria($categoria);
+    }
+
+    $sql = "SELECT * FROM Categorias WHERE LOWER(nom) LIKE '%{$categorialower}%'";
+    $result = $conn->query($sql);
+    while($categoria = $result->fetch_assoc()) {
+        $id[] = $categoria["id"];
+    }
+    producto_categoria($idproducte, $id[0]);
+}
+
+function ver_categorias_usuario($id) {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "SELECT * FROM Categorias_Productos WHERE idproducte='$id'";
+    $result = $conn->query($sql);
+
+    echo "<table border='1'>";
+    if ($result->num_rows > 0) {
+        while($producto = $result->fetch_assoc()) {
+            $idcategoria[] = $producto["idcategoria"];
+        }
+
+        for ($n=0; $n < count($idcategoria); $n++) {
+            $idcat = $idcategoria[$n];
+
+            $sql = "SELECT * FROM Categorias WHERE id='$idcat'";
+            $result = $conn->query($sql);
+
+            while($categoria = $result->fetch_assoc()) {
+                $nomcategoria[] = $categoria["nom"];
+                echo "<form method='post'><tr>
+                    <input type='hidden' name='idcat' value='".$idcat."'>
+                    <input type='hidden' name='idprod' value='".$_REQUEST["idprod"]."'>
+                    <td><input type='text' name='categoria' value='".$nomcategoria[$n]."' readonly></td>
+                    <td><button type='submit' name='borrcat' value='si'>Borrar categoria</button></td>
+                </tr></form>"; 
+            }
+        }  
+    } else {
+        echo "<td>Este producto no tiene categorias!</td>";
+    }
+    echo "</table>";
+}
+
+function borrar_categoria_producto($id) {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "DELETE FROM Categorias_Productos WHERE idcategoria='$id'";
+    $result = $conn->query($sql);
+    $conn->close();
+
+    echo "Categoria eliminada del producto!";
+}
+
+function ver_categorias($id) {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "SELECT * FROM Categorias_Productos WHERE idproducte='$id'";
+    $result = $conn->query($sql);
+
+    echo "<table border='1'><tr>";
+    if ($result->num_rows > 0) {
+        while($producto = $result->fetch_assoc()) {
+            $idcategoria[] = $producto["idcategoria"];
+        }
+
+        for ($n=0; $n < count($idcategoria); $n++) {
+            $idcat = $idcategoria[$n];
+            $sql = "SELECT * FROM Categorias WHERE id='$idcat'";
+            $result = $conn->query($sql);
+            while($categoria = $result->fetch_assoc()) {
+                $nomcategoria[] = $categoria["nom"];
+                echo "<td><input type='text' name='categoria' value='".$nomcategoria[$n]."' readonly></td>"; 
+            }
+
+            if ($n == 7) {
+                echo "</tr><tr>";
+            }
+        }  
+    } else {
+        echo "<td>Este producto no tiene categorias!</td>";
+    }
+    echo "</tr></table>";
+}
+
+function todas_categorias() {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "SELECT * FROM Categorias";
+    $result = $conn->query($sql);
+    echo "<option hidden selected value='' readonly></option>";
+    if ($result->num_rows > 0) {
+        while($categoria = $result->fetch_assoc()) {
+            $idcategoria[] = $categoria["id"];
+            $nomcategoria[] = $categoria["nom"];
+        }
+
+        for ($n=0; $n < count($nomcategoria); $n++) {
+            echo "<option value='".$idcategoria[$n]."'>".$nomcategoria[$n]."</option>";
+        }
+    }
+    $conn->close();
+}
+
+function tabla_buscador_categoria($categoria) {
+    echo "<table border='1'>";
+    echo "<tr><th>ID</th><th>NOMBRE</th><th>DESCRIPCION</th><th>PRECIO</th><th>ACCION</th></tr>";
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "SELECT * FROM Productos WHERE id IN (SELECT idproducte FROM Categorias_Productos WHERE idcategoria='$categoria')";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        while($producto = $result->fetch_assoc()) {
+            $nombre[] = $producto["nom"];
+            $desc[] = $producto["descripcio"];
+            $precio[] = $producto["preu"];
+            $ids[] = $producto["id"];
+        }
+    
+        for ($n=0; $n < count($nombre); $n++) {
+            echo "<form action='ExerciciProducte.php' method='post'>";
+            echo "<tr>
+                <td><input size='1' type='text' name='idprod' value='".$ids[$n]."' readonly></td>
+                <td><input type='text' name='nomprod' value='".$nombre[$n]."' readonly></td>
+                <td><textarea style='resize: none;' name='descprod' cols='60' rows='3' readonly>".$desc[$n]."</textarea></td>
+                <td><input type='text' name='preuprod' value='".$precio[$n]."€' readonly></td>
+                <td><button type='submit' name='info' value='Si'>Mas informacion</button></td>";
+            echo "</tr>";
+            echo "</form>";
+        }
+    } else {
+        echo "<tr><td colspan='5' style='text-align: center;'><p>No hay productos registrados!</p></td></tr>";
     }
     
     echo "</table><br>";
