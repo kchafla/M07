@@ -35,6 +35,16 @@ function crear_cookie($aceptado) {
     }
 }
 
+function generar_string($length = 32) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
+}
+
 function cerrar_session() {
     session_unset();
     session_regenerate_id();
@@ -442,10 +452,11 @@ function tabla_productos_carrito() {
                 </form></td>";
             echo "</tr>";
         }
+        echo "</table><br>";
+        echo "<h3>Realizar la compra: <button id='checkout-button'>Pagar</button></h3>";
     } else {
-        echo "<tr><td colspan='5' style='text-align: center;'><p>No hay productos en el carrito!</p></td></tr>";
+        echo "<tr><td colspan='5' style='text-align: center;'><p>No hay productos en el carrito!</p></td></tr></table><br>";
     }
-    echo "</table><br>";
 }
 
 function afegir_carrito($id) {

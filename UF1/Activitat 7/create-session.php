@@ -1,6 +1,8 @@
 <?php
 session_start();
 include "funcions.php";
+$_SESSION["clave"] = generar_string();
+
 require 'stripe/init.php';
 
 \Stripe\Stripe::setApiKey('sk_test_51HotLaFKOcyWVH65WipOLA2n1GOXv92kPCVvDIx0wzrSpU6YOVd9g0nWoTidG7OnN3uwgart3mt1Ddo7hd5yjCtN00bD6B24un');
@@ -23,7 +25,7 @@ $checkout_session = \Stripe\Checkout\Session::create([
     'quantity' => 1,
   ]],
   'mode' => 'payment',
-  'success_url' => $YOUR_DOMAIN . '/kchafla/M07/UF1/Activitat%207/ExerciciAceptat.php',
+  'success_url' => $YOUR_DOMAIN . '/kchafla/M07/UF1/Activitat%207/ExerciciAceptat.php?clave=' . $_SESSION["clave"],
   'cancel_url' => $YOUR_DOMAIN . '/kchafla/M07/UF1/Activitat%207/ExerciciDenegat.php',
 ]);
 

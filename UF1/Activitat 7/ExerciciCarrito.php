@@ -32,7 +32,6 @@ include "funcions.php";
 <?php
     tabla_productos_carrito();
 ?>
-    <h3>Realizar la compra: <button id="checkout-button">Pagar</button></h3>
 </body>
 
 <script type="text/javascript">
