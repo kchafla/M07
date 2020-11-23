@@ -457,7 +457,7 @@ function tabla_buscador($buscar) {
                 <td><input type='text' name='nomprod' value='".$nombre[$n]."' readonly></td>
                 <td><textarea style='resize: none;' name='descprod' cols='60' rows='3' readonly>".$desc[$n]."</textarea></td>
                 <td><input type='text' name='preuprod' value='".$precio[$n]."€' readonly></td>
-                <td><button type='submit' name='info' value='Si'>Mas informacion</button></td>";
+                <td><button type='submit' name='info' value='public'>Mas informacion</button></td>";
             echo "</tr>";
             echo "</form>";
         }
@@ -600,7 +600,6 @@ function informacion_producto($id) {
         $nombre[] = $producto["nom"];
         $desc[] = $producto["descripcio"];
         $precio[] = $producto["preu"];
-        $ids[] = $producto["id"];
     }
 
     for ($n=0; $n < count($nombre); $n++) {
@@ -869,7 +868,7 @@ function tabla_buscador_categoria($categoria) {
                 <td><input type='text' name='nomprod' value='".$nombre[$n]."' readonly></td>
                 <td><textarea style='resize: none;' name='descprod' cols='60' rows='3' readonly>".$desc[$n]."</textarea></td>
                 <td><input type='text' name='preuprod' value='".$precio[$n]."€' readonly></td>
-                <td><button type='submit' name='info' value='Si'>Mas informacion</button></td>";
+                <td><button type='submit' name='info' value='public'>Mas informacion</button></td>";
             echo "</tr>";
             echo "</form>";
         }
