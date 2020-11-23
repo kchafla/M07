@@ -25,28 +25,33 @@
             afegir_carrito($_REQUEST["idprod"]);
         }
 
-        if (isset($_REQUEST["info"])  && $_REQUEST["info"] == "public") {
+    if (isset($_REQUEST["info"])  && $_REQUEST["info"] == "public") {
 ?>
 <form method="post">
     <h3>Volver a la pagina principal: <button type="submit" name="volver" value="public">Menu</button></h3>
 </form>
 <?php
-        }
+    }
 
-        if (isset($_REQUEST["info"])  && $_REQUEST["info"] == "carrito") {
+    if (isset($_REQUEST["info"])  && $_REQUEST["info"] == "carrito") {
 ?>
 <form method="post">
     <h3>Volver al carrito: <button type="submit" name="volvercarr" value="carrito">Menu</button></h3>
 </form>
 <?php
-        }
+    }
 
+    if (isset($_SESSION["user"]) && comprovar_vendido($_REQUEST["idprod"])) {
         echo "<form method='post'>
             <input type='hidden' name='idprod' value='".$_REQUEST["idprod"]."'>";
 ?>
     <h3>Añadir al carrito: <button type="submit" name="afegir" value="Si">Añadir</button></h3>
 </form><br>
 <?php
+    } else {
+        echo "<h3>Este producto ya se ha vendido!</h3>";
+    }
+
         informacion_producto($_REQUEST["idprod"]);
 ?>
 <h3>Categorias:</h3>
@@ -54,7 +59,7 @@
         ver_categorias($_REQUEST["idprod"]);
 ?>
 <br><h3>Imagenes del producto:</h3>
-<?php    
+<?php
         tabla_imagenes($_REQUEST["idprod"]);
     } else {
         header("Location: ExerciciPublic.php");

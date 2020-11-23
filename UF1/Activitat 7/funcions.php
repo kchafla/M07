@@ -203,7 +203,35 @@ function generar_tabla_admin() {
                 <td><select name='regrol'><option value='1'>Administrador</option><option value='2' selected>Usuario</option></select></td>
                 <td><button type='submit' name='crear' value='si'>Crear</button></td>
             </form>
-        </table>";
+        </table><br>";
+}
+
+function generar_transacciones_admin() {
+    echo "<table border='1'>";
+    echo "<tr><th>ID</th><th>USUARIO</th><th>IMPORTE</th><th>FECHA</th></tr>";
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "SELECT * FROM Transacciones";
+    $result = $conn->query($sql);
+
+    while($transacciones = $result->fetch_assoc()) {
+        $ids[] = $transacciones["id"];
+        $fechas[] = $transacciones["data"];
+        $importes[] = $transacciones["import_total"];
+        $usuarios[] = $transacciones["idusuari"];
+    }
+
+    for ($n=0; $n < count($usuarios); $n++) { 
+        echo "<form method='post'>";
+        echo "<tr>
+            <td><input size='1' type='text' name='id' value='".$ids[$n]."' readonly></td>
+            <td><input type='text' name='user' value='".$usuarios[$n]."'></td>
+            <td><input type='text' name='precio' value='".$importes[$n]."€'></td>
+            <td><input type='text' name='data' value='".$fechas[$n]."'></td>";
+        echo "</tr>";
+        echo "</form>";
+    }
+    echo "</table><br>";
 }
 
 function borrar_usuario($user) {
@@ -268,12 +296,12 @@ function subir_producto($nom, $descripcion, $precio, $usuario) {
         $usuario = $result->fetch_assoc();
         $id = $usuario["id"];
 
-        $sql = "INSERT INTO Productos VALUES (NULL,'$nom','$descripcion', $precio, $id)";
+        $sql = "INSERT INTO Productos VALUES (NULL,'$nom','$descripcion', $precio, $id, NULL)";
 
         if ($conn->query($sql) === TRUE) {
-                echo "<p>Producto registrado con exito!</p>";
+            echo "<p>Producto registrado con exito!</p>";
         } else {
-                echo "Error: ".$sql."<br>".$conn->error;
+            echo "Error: ".$sql."<br>".$conn->error;
         }
 
         $conn->close();
@@ -306,6 +334,21 @@ function borrar_producto($id) {
     $conn->close();
 
     echo "Producto eliminado!";
+}
+
+function comprovar_vendido($id) {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "SELECT * FROM Productos WHERE id='$id'";
+    $result = $conn->query($sql);
+    $producto = $result->fetch_assoc();
+    $comprado = $producto["id_transaccion"];
+
+    if ($comprado == "") {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function tabla_productos_usuario($user) {
@@ -494,6 +537,46 @@ function sacar_carrito($id) {
 
         $_SESSION["precios"] -= $precio;
     }
+}
+
+function acabar_transaccion() {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $usuario = $_SESSION["user"];
+    $sql = "SELECT * FROM Usuarios WHERE user='$usuario'";
+
+    $result = $conn->query($sql);
+    $usuario = $result->fetch_assoc();
+
+    $id = $usuario["id"];
+    $data = date("Y-m-d");
+    $precio = $_SESSION["precios"];
+
+    $sql = "INSERT INTO Transacciones VALUES (NULL,'$data', $precio, $id)";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "<p>El pago se ha realizado correctamente!</p>";
+    } else {
+        echo "Error: ".$sql."<br>".$conn->error;
+    }
+    $sql = "SELECT LAST_INSERT_ID() as id";
+    $result = $conn->query($sql);
+    $idt = $result->fetch_assoc();
+    $idtrans = $idt["id"];
+
+    producto_transacion($idtrans);
+}
+
+function producto_transacion($id) {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    for ($n=0; $n < count($_SESSION["carrito"]); $n++) {
+        $idprod = $_SESSION["carrito"][$n];
+        $sql = "UPDATE Productos SET id_transaccion='$id' WHERE id=$idprod";
+        $result = $conn->query($sql);
+    }
+
+    $conn->close();
 }
 
 function informacion_producto($id) {

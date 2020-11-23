@@ -27,16 +27,18 @@
     }
     
     if (isset($_SESSION["user"]) && isset($_SESSION["password"])) {
-        echo "<h2>Hola ".$_SESSION["user"]."!</h2><br>";
-?>
-<h3>Tabla de administración:</h3>
-<?php
-    generar_tabla_admin();
+        echo "<h2>Hola ".$_SESSION["user"]."!</h2>";
 ?>
 <form method="post">
-    <br><h3>Cerrar sesion: <button type="submit" name="salir" value="si">Salir</button></h3>
-</form>
+    <h3>Cerrar sesion: <button type="submit" name="salir" value="si">Salir</button></h3>
+</form><br>
+<h3>Tabla de administración:</h3>
 <?php
+        generar_tabla_admin();
+?>
+<h3>Tabla de transacciones:</h3>
+<?php
+        generar_transacciones_admin();
     } else {
         header("Location: ExerciciPublic.php");
     }
