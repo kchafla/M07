@@ -49,7 +49,7 @@
 </form><br>
 <?php
     } else {
-        echo "<h3>Este producto ya se ha vendido!</h3>";
+        echo "<h3>Este producto ya se ha vendido!</h3><br>";
     }
 
         informacion_producto($_REQUEST["idprod"]);

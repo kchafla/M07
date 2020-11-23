@@ -43,7 +43,7 @@
     }
     
     if (isset($_SESSION["user"]) && isset($_SESSION["password"])) {
-        echo "<h2>Hola ".$_SESSION["user"]."!</h2>";
+        echo "<h2>Pagina privada de ".$_SESSION["user"]."!</h2>";
 ?>
 <form method="post">
     <h3>Volver a la pagina principal: <button type="submit" name="volver" value="si">Volver</button></h3>

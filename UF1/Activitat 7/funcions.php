@@ -208,7 +208,7 @@ function generar_tabla_admin() {
 
 function generar_transacciones_admin() {
     echo "<table border='1'>";
-    echo "<tr><th>ID</th><th>USUARIO</th><th>IMPORTE</th><th>FECHA</th></tr>";
+    echo "<tr><th>ID</th><th>USUARIO</th><th>IMPORTE TOTAL</th><th>FECHA</th></tr>";
     $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
 
     $sql = "SELECT * FROM Transacciones";
@@ -221,13 +221,19 @@ function generar_transacciones_admin() {
         $usuarios[] = $transacciones["idusuari"];
     }
 
-    for ($n=0; $n < count($usuarios); $n++) { 
+    for ($n=0; $n < count($usuarios); $n++) {
+        $id = $usuarios[$n];
+        $sql = "SELECT * FROM Usuarios WHERE id='$id'";
+        $result = $conn->query($sql);
+        $nombre = $result->fetch_assoc();
+        $user = $nombre["user"];
+
         echo "<form method='post'>";
         echo "<tr>
             <td><input size='1' type='text' name='id' value='".$ids[$n]."' readonly></td>
-            <td><input type='text' name='user' value='".$usuarios[$n]."'></td>
-            <td><input type='text' name='precio' value='".$importes[$n]."€'></td>
-            <td><input type='text' name='data' value='".$fechas[$n]."'></td>";
+            <td><input type='text' name='user' value='".$user."' readonly></td>
+            <td><input type='text' name='precio' value='".$importes[$n]."€' readonly></td>
+            <td><input type='text' name='data' value='".$fechas[$n]."' readonly></td>";
         echo "</tr>";
         echo "</form>";
     }
