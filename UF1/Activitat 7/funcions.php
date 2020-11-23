@@ -214,6 +214,8 @@ function generar_transacciones_admin() {
     $sql = "SELECT * FROM Transacciones";
     $result = $conn->query($sql);
 
+    $total = 0;
+
     while($transacciones = $result->fetch_assoc()) {
         $ids[] = $transacciones["id"];
         $fechas[] = $transacciones["data"];
@@ -222,6 +224,7 @@ function generar_transacciones_admin() {
     }
 
     for ($n=0; $n < count($usuarios); $n++) {
+        $total += $importes[$n];
         $id = $usuarios[$n];
         $sql = "SELECT * FROM Usuarios WHERE id='$id'";
         $result = $conn->query($sql);
@@ -238,7 +241,8 @@ function generar_transacciones_admin() {
         echo "</tr>";
         echo "</form>";
     }
-    echo "</table><br>";
+    echo "</table>";
+    echo "<h3>Se han realizado compras de un total de ".$total."€!</h3>";
 }
 
 function tabla_productos_transacciones($id) {
