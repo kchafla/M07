@@ -208,7 +208,7 @@ function generar_tabla_admin() {
 
 function generar_transacciones_admin() {
     echo "<table border='1'>";
-    echo "<tr><th>ID</th><th>USUARIO</th><th>IMPORTE TOTAL</th><th>FECHA</th></tr>";
+    echo "<tr><th>ID</th><th>USUARIO</th><th>IMPORTE TOTAL</th><th>FECHA</th><th>ACCION</th></tr>";
     $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
 
     $sql = "SELECT * FROM Transacciones";
@@ -228,17 +228,49 @@ function generar_transacciones_admin() {
         $nombre = $result->fetch_assoc();
         $user = $nombre["user"];
 
-        echo "<form method='post'>";
+        echo "<form action='ExerciciDetalls.php' method='post'>";
         echo "<tr>
             <td><input size='1' type='text' name='id' value='".$ids[$n]."' readonly></td>
             <td><input type='text' name='user' value='".$user."' readonly></td>
             <td><input type='text' name='precio' value='".$importes[$n]."€' readonly></td>
-            <td><input type='text' name='data' value='".$fechas[$n]."' readonly></td>";
+            <td><input type='text' name='data' value='".$fechas[$n]."' readonly></td>
+            <td><button type='submit' name='detallinfo' value='si'>Mes detalls</button></td>";
         echo "</tr>";
         echo "</form>";
     }
     echo "</table><br>";
 }
+
+function tabla_productos_transacciones($id) {
+    echo "<table border='1'>";
+    echo "<tr><th>ID</th><th>NOMBRE</th><th>DESCRIPCION</th><th>PRECIO</th><th>ACCION</th></tr>";
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "SELECT * FROM Productos WHERE id_transaccion='$id'";
+    $result = $conn->query($sql);
+
+    while($producto = $result->fetch_assoc()) {
+        $nombre[] = $producto["nom"];
+        $desc[] = $producto["descripcio"];
+        $precio[] = $producto["preu"];
+        $ids[] = $producto["id"];
+    }
+
+    for ($n=0; $n < count($nombre); $n++) {
+        echo "<form action='ExerciciProducte.php' method='post'>";
+        echo "<tr>
+            <td><input size='1' type='text' name='idprod' value='".$ids[$n]."' readonly></td>
+            <td><input type='text' name='nomprod' value='".$nombre[$n]."' readonly></td>
+            <td><textarea style='resize: none;' name='descprod' cols='60' rows='3' readonly>".$desc[$n]."</textarea></td>
+            <td><input type='text' name='preuprod' value='".$precio[$n]."€' readonly></td>
+            <td><button type='submit' name='info' value='admin'>Mas informacion</button></td>";
+        echo "</tr>";
+        echo "</form>";
+    }
+    
+    echo "</table><br>";
+}
+
 
 function borrar_usuario($user) {
     $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");

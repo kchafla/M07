@@ -9,9 +9,11 @@ include "funcions.php";
 </head>
 <body>
 <?php
-    if ($_GET["clave"] == $_SESSION["clave"]) {
-        unset($_SESSION["clave"]);
-        acabar_transaccion();
+    if (isset($_SESSION["clave"])) {
+        if ($_GET["clave"] == $_SESSION["clave"]) {
+            unset($_SESSION["clave"]);
+            acabar_transaccion();
+        }
     } else {
         header("Location: ExerciciDenegat.php");
     }

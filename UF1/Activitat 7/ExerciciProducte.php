@@ -21,6 +21,10 @@
             header("Location: ExerciciCarrito.php");
         }
 
+        if (isset($_REQUEST["volveradm"])) {
+            header("Location: ExerciciPrivatAdmin.php");
+        }
+
         if (isset($_REQUEST["afegir"])) {
             afegir_carrito($_REQUEST["idprod"]);
         }
@@ -41,7 +45,18 @@
 <?php
     }
 
-    if (isset($_SESSION["user"]) && comprovar_vendido($_REQUEST["idprod"])) {
+    if (isset($_REQUEST["info"])  && $_REQUEST["info"] == "admin") {
+?>
+<form method="post">
+    <h3>Volver a pagina de administracion: <button type="submit" name="volveradm" value="carrito">Menu</button></h3>
+</form>
+<?php
+    }
+    
+
+    if (!isset($_SESSION["user"])) {
+        echo "<h3>Tienes que iniciar sesion para ver tu carrito!</h3>";
+    } else if (isset($_SESSION["user"]) && comprovar_vendido($_REQUEST["idprod"])) {
         echo "<form method='post'>
             <input type='hidden' name='idprod' value='".$_REQUEST["idprod"]."'>";
 ?>

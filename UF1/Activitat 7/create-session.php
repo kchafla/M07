@@ -18,7 +18,7 @@ $checkout_session = \Stripe\Checkout\Session::create([
       'currency' => 'eur',
       'unit_amount' => number_format($_SESSION["precios"], 2, "", ""),
       'product_data' => [
-        'name' => 'Compra en Desconfirmo Web',
+        'name' => 'Compra en Reconfirmo Web',
         'images' => ["https://i.imgur.com/dvpqHBi.jpg"],
       ],
     ],
