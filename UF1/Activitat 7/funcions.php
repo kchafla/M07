@@ -582,6 +582,9 @@ function producto_transacion($id) {
         $result = $conn->query($sql);
     }
 
+    unset($_SESSION["carrito"]);
+    unset($_SESSION["precios"]);
+
     $conn->close();
 }
 
