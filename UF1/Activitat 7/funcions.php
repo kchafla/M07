@@ -591,7 +591,7 @@ function acabar_transaccion() {
     $usuario = $result->fetch_assoc();
 
     $id = $usuario["id"];
-    $data = date("Y-m-d");
+    $data = date("Y-m-d G:i:s");
     $precio = $_SESSION["precios"];
 
     $sql = "INSERT INTO Transacciones VALUES (NULL,'$data', $precio, $id)";
@@ -626,28 +626,33 @@ function producto_transacion($id) {
 
 function informacion_producto($id) {
     echo "<table border='1'>";
-    echo "<tr><th>NOMBRE</th><th>DESCRIPCION</th><th>PRECIO</th></tr>";
+    echo "<tr><th>VENDEDOR</th><th>NOMBRE</th><th>DESCRIPCION</th><th>PRECIO</th></tr>";
     $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
 
     $sql = "SELECT * FROM Productos WHERE id='$id'";
     $result = $conn->query($sql);
 
     while($producto = $result->fetch_assoc()) {
-        $nombre[] = $producto["nom"];
-        $desc[] = $producto["descripcio"];
-        $precio[] = $producto["preu"];
+        $nombre = $producto["nom"];
+        $desc = $producto["descripcio"];
+        $precio = $producto["preu"];
+        $usuario = $producto["idusuari"];
     }
 
-    for ($n=0; $n < count($nombre); $n++) {
-        echo "<form method='post'>";
-        echo "<tr>
-            <td><input type='text' name='nomprod' value='".$nombre[$n]."' readonly></td>
-            <td><textarea style='resize: none;' name='descprod' cols='60' rows='3' readonly>".$desc[$n]."</textarea></td>
-            <td><input type='text' name='preuprod' value='".$precio[$n]."€' readonly></td>";
-        echo "</tr>";
-        echo "</form>";
-    }
-    
+    $sql = "SELECT * FROM Usuarios WHERE id='$usuario'";
+    $result = $conn->query($sql);
+    $user = $result->fetch_assoc();
+    $correo = $user["user"];
+
+    echo "<form method='post'>";
+    echo "<tr>
+        <td><input type='text' name='usuario' value='".$correo."' readonly></td>
+        <td><input type='text' name='nomprod' value='".$nombre."' readonly></td>
+        <td><textarea style='resize: none;' name='descprod' cols='60' rows='3' readonly>".$desc."</textarea></td>
+        <td><input type='text' name='preuprod' value='".$precio."€' readonly></td>";
+    echo "</tr>";
+    echo "</form>";
+
     echo "</table><br>";
 }
 
