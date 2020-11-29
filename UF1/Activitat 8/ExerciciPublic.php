@@ -17,6 +17,10 @@
             header("Location: ExerciciRegistre.php");
         }
 
+        if (isset($_REQUEST["recuperar"])) {
+            header("Location: ExerciciCorreo.php");
+        }
+
         if (isset($_REQUEST["aceptar"])) {
             crear_cookie($_REQUEST["aceptar"]);
         }
@@ -47,6 +51,9 @@
 </table><br>
 <form method="post">
     <h3>Registrarse: <button type="submit" name="registrarse" value="Si">Registrarse</button></h3>
+</form>
+<form method="post">
+    <h3>Recuperar contraseña: <button type="submit" name="recuperar" value="Si">Recuperar</button></h3>
 </form><br>
 <?php
         } else {

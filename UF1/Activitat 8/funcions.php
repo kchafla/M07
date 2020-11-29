@@ -52,6 +52,74 @@ function cerrar_session() {
     header("Location: ExerciciPublic.php");
 }
 
+function codigo_db($codi, $user) {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "INSERT INTO Recuperacion VALUES ('$codi', '$user')";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "<p>El codigo funciona!</p>";
+    } else {
+        echo "Error: ".$sql."<br>".$conn->error;
+    }
+
+    $conn->close();
+}
+
+function comprovar_codigo($codi) {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+                
+    $sql = "SELECT * FROM Recuperacion WHERE codi='$codi'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function cambiar_password($password, $user, $codi) {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+
+    $sql = "UPDATE Usuarios SET password='$password' WHERE user='$user'";
+    $result = $conn->query($sql);
+
+    $sql = "DELETE FROM Recuperacion WHERE codi='$codi'";
+    $result = $conn->query($sql);
+
+    $conn->close();
+}
+
+function codigo_correo($codi) {
+    $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+                
+    $sql = "SELECT user FROM Recuperacion WHERE codi='$codi'";
+    $result = $conn->query($sql);
+    $usuario = $result->fetch_assoc();
+
+    return $usuario["user"];
+}
+
+function comprovar_email_db($user) {
+    if (comprovar_email($user)) {
+        $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
+                
+        $sql = "SELECT * FROM Usuarios WHERE user='$user'";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            return true;
+        } else {
+            echo "<p>Datos incorrectos!</p>";
+            return false;
+        }
+    } else {
+        echo "<p>Has escrito el correo/contraseña incorrectamente!</p>";
+        return false;
+    }
+}
+
 function ir_pagina($user, $password) {
     $conn = new mysqli("localhost", "kchafla", "kchafla", "kchafla_Activitat05");
                 
@@ -464,7 +532,7 @@ function tabla_productos() {
             echo "</form>";
         }
     } else {
-        echo "<tr><td colspan='3' style='text-align: center;'><p>No hay productos registrados!</p></td></tr>";
+        echo "<tr><td colspan='5' style='text-align: center;'><p>No hay productos registrados!</p></td></tr>";
     }
     
     echo "</table><br>";
