@@ -12,6 +12,8 @@
     for ($h=0; $h < 24; $h++) { 
         if ($hora == $h) {
             echo "<strong>$h</strong> ";
+        } else if ($hora > $h) {
+            echo "<i>$h</i> ";
         } else {
             echo "$h ";
         }    
@@ -24,6 +26,8 @@
     for ($m=0; $m < 60; $m++) { 
         if ($minut == $m) {
             echo "<strong>$m</strong> ";
+        } else if ($minut > $m) {
+            echo "<i>$m</i> ";
         } else {
             echo "$m ";
         }        
@@ -36,6 +40,8 @@
     for ($s=0; $s < 60; $s++) { 
         if ($segon == $s) {
             echo "<strong>$s</strong> ";
+        } else if ($segon > $s) {
+            echo "<i>$s</i> ";
         } else {
             echo "$s ";
         }        
