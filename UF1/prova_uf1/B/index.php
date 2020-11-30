@@ -11,6 +11,7 @@
 <body>
 <?php
     include "funcions.php";
+    
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_REQUEST["login"])) {
             iniciar_sesion(comprovar_campo($_REQUEST["user"]), comprovar_campo($_REQUEST["password"]));

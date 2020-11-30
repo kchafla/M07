@@ -16,6 +16,7 @@
 <body>
 <?php
     include "funcions.php";
+    
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($_REQUEST["numero1"] + $_REQUEST["numero2"] == $_REQUEST["resultado"]) {
             if (isset($_REQUEST["enviar"]) && comprovar_email_db($_REQUEST["mail"])) {
