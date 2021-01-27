@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Prueba;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\Exercici1Controller;
+use App\Http\Controllers\Exercici2Controller;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +27,10 @@ Route::get('/pruebaDirecta', function () {
 });
 
 Route::get('/exercici1', [Exercici1Controller::class, 'Exercici1'])->middleware('auth');
-Route::post('/validacio', [Exercici1Controller::class, 'Validacio'])->middleware('auth');
+Route::post('/validacio1', [Exercici1Controller::class, 'Validacio1'])->middleware('auth');
+
+Route::get('/exercici2', [Exercici2Controller::class, 'Exercici2'])->middleware('auth');
+Route::post('/validacio2', [Exercici2Controller::class, 'Validacio2'])->middleware('auth');
 
 Route::get('/prueba', [Prueba::class, 'pagina']);
 

@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Exercici 1</h1>
-    <form action="validacio" method="post">
+    <form action="validacio1" method="post">
         @csrf
         <label>Correo: </label><input type="text" name="correo">
         <label>Edad: </label><input type="text" name="edad">

@@ -10,11 +10,11 @@ class Exercici1Controller extends Controller
         return view("exercici1");
     }
 
-    public function Validacio(Request $request) {
+    public function Validacio1(Request $request) {
         $validated = $request->validate([
             'correo' => 'required',
             'edad' => 'required',
         ]);
-        return view("validacio", $validated);
+        return view("validacio1", $validated);
     }
 }
