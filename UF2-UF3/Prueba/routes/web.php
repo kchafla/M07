@@ -7,6 +7,8 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\Exercici1Controller;
 use App\Http\Controllers\Exercici2Controller;
 
+use App\Http\Controllers\LibroController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,6 +19,9 @@ use App\Http\Controllers\Exercici2Controller;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::resource('libro', LibroController::class);
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -41,3 +46,6 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
+
+
+Route::resource('videojuegos', App\Http\Controllers\VideojuegoController::class);
