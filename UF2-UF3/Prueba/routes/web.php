@@ -22,7 +22,6 @@ use App\Http\Controllers\LibroController;
 
 Route::resource('libro', LibroController::class);
 
-
 Route::get('/', function () {
     return view('welcome');
 });

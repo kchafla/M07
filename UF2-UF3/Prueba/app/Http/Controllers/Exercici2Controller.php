@@ -18,16 +18,15 @@ class Exercici2Controller extends Controller
             'imagen' => 'required|image|dimensions:max_width=1920,max_height=1080',
         ]);
 
-        $file = $request->file('imagen');
+        $image = $request->file('imagen');
         $destinationPath = 'img/';
-        $originalImage = $file->getClientOriginalName();
-        $file->move($destinationPath, $originalImage);
+        $originalImage = $image->getClientOriginalName();
+        $image->move($destinationPath, $originalImage);
 
         $file = $request->file('fichero');
         $destinationPath = 'files/';
         $originalFile = $file->getClientOriginalName();
         $file->move($destinationPath, $originalFile);
-
 
         $data['validated'] = $validated;
         $data['originalImage'] = $originalImage;
