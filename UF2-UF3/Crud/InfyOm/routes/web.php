@@ -35,3 +35,7 @@ Route::post('librosguardar', [LibrosController::class, 'save']);
 Route::get('librosborrar/{id}', [LibrosController::class, 'delete']);
 Route::get('libroseditar/{id}', [LibrosController::class, 'edit']);
 Route::post('librosmodificar', [LibrosController::class, 'update']);
+
+Route::resource('coches', App\Http\Controllers\CocheController::class);
+
+Route::resource('mangas', App\Http\Controllers\MangaController::class);

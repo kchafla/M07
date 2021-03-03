@@ -1,0 +1,5 @@
+<!-- $FIELD_NAME_TITLE$ Field -->
+<div class="col-sm-12">
+    <h3 class="text-white">{!! Form::label('$FIELD_NAME$', '$FIELD_NAME_TITLE$:') !!}</h3>
+    <h5 class="text-white">{{ $$MODEL_NAME_CAMEL$->$FIELD_NAME$ }}</h5>
+</div>

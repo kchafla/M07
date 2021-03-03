@@ -8,9 +8,9 @@
 <body>
     <h1>Validacio de formulari - Exercici 2</h1>
     @csrf
-    Correo: {{$data['validated']['correo']}} <br>
-    NIF: {{$data['validated']['nif']}} <br>
-    Imagen: <img src='{{ asset('img/'.$data['originalImage']) }}'><br>
-    Fichero: <a href='{{ asset('files/'.$data['originalFile']) }}'>Ir al fichero</a>
+    Correo: {{$validat['correo']}} <br>
+    NIF: {{$validat['nif']}} <br>
+    Imagen: <img src='{{ asset('img/'.$imatge) }}'><br>
+    Fichero: <a href='{{ asset('files/'.$archiu) }}'>Ir al fichero</a>
 </body>
 </html>
