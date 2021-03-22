@@ -25,5 +25,5 @@ window.Echo = new Echo({
     key: process.env.MIX_PUSHER_APP_KEY,
     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
     forceTLS: true,
-    authEndpoint: 'https://dawjavi.insjoaquimmir.cat/kchafla/M07/UF2-UF3/Facebook/public/broadcast/auth'
+    authEndpoint: 'https://dawjavi.insjoaquimmir.cat/kchafla/M07/UF2-UF3/Facebook/public/broadcasting/auth'
 });

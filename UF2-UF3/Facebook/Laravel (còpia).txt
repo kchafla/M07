@@ -1,0 +1,127 @@
+///----CREAR PROYECTO NUEVO DE LARAVEL----///
+composer create-project laravel/laravel nombre
+cd nombre
+
+chmod 777 storage/logs
+chmod 777 storage/framework/sessions
+chmod 777 storage/framework/views
+
+//CREAR BASE DE DATOS
+
+/EDITAR FICHERO .env
+/APP_URL
+/DB_DATABASE, DB_USERNAME, DB_PASSWORD
+
+chmod 777 storage/logs/laravel.log
+
+php artisan migrate
+
+composer require laravel/breeze --dev
+php artisan breeze:install
+npm install && npm run dev
+
+chmod 777 storage/framework/cache
+chmod 777 storage/framework/cache/data
+///---------------------------------------///
+
+
+
+///-------------CRUD INFYOM--------------///
+/CREAR BASE DE DATOS tabla
+
+php artisan infyom:scaffold Tabla --fromTable --tableName=tabla
+
+/EN app/Models/Tabla.php 
+/COMENTAR "use SoftDeletes;"
+/AÑADIR "public $timestamps = false;"
+///---------------------------------------///
+
+
+
+///--------------BROADCAST----------------///
+/EDITAR FICHERO .env
+/PUSHER_APP_ID, PUSHER_APP_KEY, PUSHER_APP_SECRET, PUSHER_APP_CLUSTER
+/BROADCAST_DRIVER
+
+/EDITAR FICHERO config/broadcasting.php 'default'
+
+/DESCOMENTAR "App\Providers\BroadcastServiceProvider::class," en config/app.php
+
+composer require pusher/pusher-php-server "~4.0"
+npm install --save-dev laravel-echo pusher-js
+
+/EN resources/js/boostrap.js
+/DESCOMENTAR LA PARTE DE BROADCAST
+/AÑADIR 
+/authEndpoint: 'https://dawjavi.insjoaquimmir.cat/kchafla/M07/UF2-UF3/Broadcast/public/broadcasting/auth'
+
+/AÑADIR EN webpack.mix.js "require("dotenv").config();"
+npm run dev
+
+/CREAR BASE DE DATOS, MODELO Y CONTROLADOR PARA EL BROADCAST
+php artisan make:model Modelo -r          
+
+/CREAR EVENTO
+php artisan make:event Evento
+
+/AÑADIR EN EL EVENTO
+/use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+/use App\Models\Message;
+/class NewMessageNotification implements ShouldBroadcastNow
+/public $message = null;
+/__construct(Message $message)
+/$this->message = $message;
+/return new PrivateChannel('user.'.$this->message->to);
+
+/AÑADIR CANAL routes/channels.php
+/Broadcast::channel('user.{toUserId}', function ($user, $toUserId) {
+    return $user->id == $toUserId;
+});
+
+php artisan make:controller HomeController -r
+/AÑADIR
+/use Illuminate\Support\Facades\Auth;
+/use App\Events\NewMessageNotification;
+/use App\Models\Message;
+/AÑADIR EN index()
+/$data["userId"] = Auth::user()->id;
+/return view("home", $data);
+/AÑADIR send()
+/public function send()
+    {
+        $message = new Message;
+        $message->setAttribute("from", 1);
+        $message->setAttribute("to", 2);
+        $message->setAttribute("message", "Prueba de broadcast!");
+        $message->save();
+
+        event(new NewMessageNotification($message));
+
+        return "Mensaje enviado!";
+    }
+
+
+/EN web.php
+/use App\Http\Controllers\HomeController;
+/Route::get('home', [HomeController::class, 'index'])->middleware('auth')->name('home');
+/Route::get('message', [HomeController::class, 'send'])->middleware('auth');
+
+/EN home.blade.php AÑADIR EN HEAD
+/<script id="functions" user-id="{{ $user_id }}" src="{{ asset('js/functions.js') }}" defer></script>
+
+/EN public/js CREAR functions.js
+/window.onload = function() { 
+    init(); 
+};
+
+function init() {
+    var script_tag = document.getElementById('functions');
+    var user_id = script_tag.getAttribute("user-id");
+
+    Echo.private('user.' + user_id)
+
+    .listen('NewMessageNotification', (e) => {
+        alert(e.message.message);
+    });
+}
+///---------------------------------------///

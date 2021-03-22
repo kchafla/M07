@@ -11,22 +11,22 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-use App\Models\Post;
+use App\Models\Message;
 
-class NewPostNotification implements ShouldBroadcastNow
+class NewMessageNotification implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $post = null;
+    public $message = null;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Post $post)
+    public function __construct(Message $message)
     {
-        $this->post = $post;
+        $this->message = $message;
     }
 
     /**
@@ -36,6 +36,12 @@ class NewPostNotification implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('portada');
+        if ($this->message->to > $this->message->from) {
+            return new PrivateChannel('user.'.$this->message->to.'.'.$this->message->from);
+        } else if ($this->message->to < $this->message->from) {
+            return new PrivateChannel('user.'.$this->message->from.'.'.$this->message->to);
+        } else {
+            return new PrivateChannel('user.'.$this->message->to.'.'.$this->message->to);
+        }
     }
 }

@@ -53,7 +53,7 @@ npm install --save-dev laravel-echo pusher-js
 /EN resources/js/boostrap.js
 /DESCOMENTAR LA PARTE DE BROADCAST
 /AÑADIR 
-/'authEndpoint: https://dawjavi.insjoaquimmir.cat/kchafla/M07/UF2-UF3/Broadcast/public/broadcasting/auth'
+/authEndpoint: 'https://dawjavi.insjoaquimmir.cat/kchafla/M07/UF2-UF3/Broadcast/public/broadcasting/auth'
 
 /AÑADIR EN webpack.mix.js "require("dotenv").config();"
 npm run dev
@@ -75,7 +75,7 @@ php artisan make:event Evento
 
 /AÑADIR CANAL routes/channels.php
 /Broadcast::channel('user.{toUserId}', function ($user, $toUserId) {
-    return $user->id === $toUserId;
+    return $user->id == $toUserId;
 });
 
 php artisan make:controller HomeController -r

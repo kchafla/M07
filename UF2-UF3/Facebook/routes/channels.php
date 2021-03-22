@@ -17,7 +17,10 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
+Broadcast::channel('portada', function ($user) {
+    return Auth::check();
+});
 
-Broadcast::channel('portada', function ($user, $id) {
-    return $user->id == $id;
+Broadcast::channel('user.{toUserId}.{fromUserId}', function ($user, $toUserId, $fromUserId) {
+    return $user->id == $toUserId || $user->id == $fromUserId;
 });

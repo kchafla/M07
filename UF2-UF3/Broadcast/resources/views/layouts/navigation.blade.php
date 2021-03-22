@@ -18,6 +18,9 @@
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                         {{ __('Broadcast') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('message')" :active="request()->routeIs('message')">
+                        {{ __('Mensaje') }}
+                    </x-nav-link>
                 </div>
             </div>
 

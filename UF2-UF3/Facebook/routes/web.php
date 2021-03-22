@@ -23,7 +23,17 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::get('facebook', [HomeController::class, 'index']);
-Route::get('post', [HomeController::class, 'index']);
+Route::get('facebook', [HomeController::class, 'indexFacebook'])->middleware('auth')->name('facebook');
+
+Route::post('post', [HomeController::class, 'enviar'])->middleware('auth')->name('post');
+Route::post('delete', [HomeController::class, 'borrar'])->middleware('auth')->name('delete');
+Route::post('comment', [HomeController::class, 'comentar'])->middleware('auth')->name('comment');
+Route::post('like', [HomeController::class, 'like'])->middleware('auth')->name('like');
+
+Route::get('chat', [HomeController::class, 'indexChat'])->middleware('auth')->name('chat');
+Route::get('usuarios', [HomeController::class, 'usuarios'])->middleware('auth')->name('usuarios');
+Route::get('mensajes', [HomeController::class, 'mensajes'])->middleware('auth')->name('mensajes');
+
+Route::post('mensajear', [HomeController::class, 'mensajear'])->middleware('auth')->name('mensajear');
 
 require __DIR__.'/auth.php';

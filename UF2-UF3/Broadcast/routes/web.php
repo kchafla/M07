@@ -25,4 +25,4 @@ Route::get('/dashboard', function () {
 require __DIR__.'/auth.php';
 
 Route::get('home', [HomeController::class, 'index'])->middleware('auth')->name('home');
-Route::get('message/send', [HomeController::class, 'send'])->middleware('auth');
+Route::get('message/send', [HomeController::class, 'send'])->middleware('auth')->name('message');

@@ -11,22 +11,22 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-use App\Models\Post;
+use App\Models\Like;
 
-class NewPostNotification implements ShouldBroadcastNow
+class NewLikeNotification implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $post = null;
+    public $like = null;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Post $post)
+    public function __construct(Like $like)
     {
-        $this->post = $post;
+        $this->like = $like;
     }
 
     /**
