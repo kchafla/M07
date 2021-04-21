@@ -38,10 +38,8 @@ class NewMessageNotification implements ShouldBroadcastNow
     {
         if ($this->message->to > $this->message->from) {
             return new PrivateChannel('user.'.$this->message->to.'.'.$this->message->from);
-        } else if ($this->message->to < $this->message->from) {
-            return new PrivateChannel('user.'.$this->message->from.'.'.$this->message->to);
         } else {
-            return new PrivateChannel('user.'.$this->message->to.'.'.$this->message->to);
+            return new PrivateChannel('user.'.$this->message->from.'.'.$this->message->to);
         }
     }
 }

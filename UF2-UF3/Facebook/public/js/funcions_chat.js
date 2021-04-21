@@ -9,7 +9,9 @@ function init() {
 
         $("#users").append("<option selected='true' hidden='true' disabled='disabled'>Usuarios...</option>");
         usuaris.forEach(usuari => {
-            $("#users").append($("<option>").val(usuari.id).text(usuari.name));
+            if (usuari.id != $("#user_id").attr("name")) {
+                $("#users").append($("<option>").val(usuari.id).text(usuari.name));
+            }
             noms.push(usuari.name);
         });
 
@@ -32,10 +34,8 @@ function init() {
 
             if (anterior > connectat) {
                 Echo.private("user." + anterior + "." + connectat).stopListening("NewMessageNotification");
-            } else if (anterior < connectat) {
-                Echo.private("user." + connectat + "." + anterior).stopListening("NewMessageNotification");
             } else {
-                Echo.private("user." + connectat + "." + connectat).stopListening("NewMessageNotification");
+                Echo.private("user." + connectat + "." + anterior).stopListening("NewMessageNotification");
             }
 
             if (connectat > enviar) {
@@ -43,13 +43,8 @@ function init() {
                 .listen("NewMessageNotification", function(e) {
                     $("#mensajes").prepend($("<p>").text(noms[e.message.from-1] + " a las " + e.message.created_at.substring(0,19).replace("T", " ") + " - " + e.message.message));
                 });
-            } else if (connectat < enviar) {
-                Echo.private("user." + enviar + "." + connectat)
-                .listen("NewMessageNotification", function(e) {
-                    $("#mensajes").prepend($("<p>").text(noms[e.message.from-1] + " a las " + e.message.created_at.substring(0,19).replace("T", " ") + " - " + e.message.message));
-                });
             } else {
-                Echo.private("user." + enviar + "." + enviar)
+                Echo.private("user." + enviar + "." + connectat)
                 .listen("NewMessageNotification", function(e) {
                     $("#mensajes").prepend($("<p>").text(noms[e.message.from-1] + " a las " + e.message.created_at.substring(0,19).replace("T", " ") + " - " + e.message.message));
                 });
